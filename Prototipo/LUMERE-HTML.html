@@ -1,0 +1,1539 @@
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LUMIÈRE - Closet Virtual</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <style>
+    body {
+      font-family: 'Playfair Display', serif;
+      background-color: #f5f5dc;
+      color: #1f1f1f;
+      min-height: 100vh;
+      margin: 0;
+    }
+    /* Scrollbar for outfit grid */
+    .scrollbar-thin::-webkit-scrollbar {
+      height: 6px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background-color: #1f1f1f;
+      border-radius: 10px;
+    }
+    /* Smooth transitions */
+    button,
+    input,
+    .icon-btn {
+      transition: all 0.3s ease;
+    }
+    button:hover,
+    .icon-btn:hover {
+      filter: brightness(0.9);
+    }
+    input:focus {
+      outline: none;
+      border-color: #1f1f1f;
+      box-shadow: 0 0 8px #1f1f1f;
+      background-color: #fff;
+      color: #1f1f1f;
+    }
+    /* Hide default number input arrows */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+    /* Buttons */
+    .btn-primary {
+      background-color: #f5f5dc;
+      color: #1f1f1f;
+      font-weight: 600;
+      border-radius: 0.375rem;
+      padding: 0.75rem 2.5rem;
+      box-shadow: 0 4px 6px rgba(245, 245, 220, 0.4);
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid #d4af37;
+    }
+    .btn-primary:hover {
+      background-color: #e0dcbf;
+      color: #1f1f1f;
+      box-shadow: 0 6px 10px rgba(224, 220, 191, 0.7);
+    }
+    .btn-primary:active {
+      background-color: #bfb99f;
+      box-shadow: 0 2px 6px rgba(191, 185, 159, 0.9);
+      transform: scale(0.97);
+    }
+    /* Card backgrounds */
+    .card-bg {
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(31, 31, 31, 0.15);
+      border-radius: 0.5rem;
+      color: #1f1f1f;
+    }
+    /* Text shadows for elegance */
+    h1, h2, h3 {
+      text-shadow: none;
+    }
+    /* Active filter button style */
+    .filter-btn {
+      background-color: #d4af37;
+      color: #1f1f1f;
+      border-radius: 0.375rem;
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid #bfae6f;
+      transition: background-color 0.3s ease;
+    }
+    .filter-btn:hover {
+      background-color: #bfae6f;
+      color: #1f1f1f;
+    }
+    .filter-btn.active {
+      background-color: #f5f5dc;
+      color: #1f1f1f;
+      border-color: #a18f4a;
+    }
+    /* Profile cards container */
+    .profile-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+    }
+    /* Profile card button style */
+    .profile-card-btn {
+      flex: 1 1 120px;
+      max-width: 180px;
+      background: #f5f5dc;
+      color: #1f1f1f;
+      border-radius: 0.5rem;
+      padding: 1.5rem 0;
+      font-weight: 600;
+      font-size: 1.125rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(31,31,31,0.15);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+      border: 1px solid #d4af37;
+    }
+    .profile-card-btn:hover {
+      background-color: #e0dcbf;
+      box-shadow: 0 4px 12px rgba(31,31,31,0.3);
+      color: #1f1f1f;
+    }
+    .profile-card-btn:active {
+      background-color: #bfb99f;
+      box-shadow: 0 2px 6px rgba(31,31,31,0.5);
+      color: #1f1f1f;
+      transform: scale(0.97);
+    }
+    .profile-card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    /* Profile main container adjustments */
+    #profile .profile-main {
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    /* Profile name */
+    #profile .profile-name {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      color: #1f1f1f;
+    }
+    /* Outfits favoritos text */
+    #profile .profile-subtitle {
+      font-size: 1rem;
+      color: #6b6b6b;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+    /* Logout button */
+    #profile #logoutBtn {
+      background-color: #f5f5dc;
+      color: #1f1f1f;
+      font-weight: 700;
+      border-radius: 0.5rem;
+      padding: 0.75rem 0;
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto 1rem auto;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(31,31,31,0.15);
+      border: 1px solid #d4af37;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+    }
+    #profile #logoutBtn:hover {
+      background-color: #e0dcbf;
+      box-shadow: 0 4px 12px rgba(31,31,31,0.3);
+      color: #1f1f1f;
+    }
+    #profile #logoutBtn:active {
+      background-color: #bfb99f;
+      box-shadow: 0 2px 6px rgba(31,31,31,0.5);
+      color: #1f1f1f;
+      transform: scale(0.97);
+    }
+    /* Category images container */
+    #profile .category-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(120px,1fr));
+      gap: 1rem;
+      max-width: 700px;
+      margin: 0 auto 2rem auto;
+    }
+    #profile .category-card {
+      background: #f5f5dc;
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      box-shadow: 0 2px 6px rgba(31,31,31,0.15);
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+      color: #1f1f1f;
+      border: 1px solid #d4af37;
+    }
+    #profile .category-card:hover {
+      background-color: #e0dcbf;
+      box-shadow: 0 4px 12px rgba(31,31,31,0.3);
+      color: #1f1f1f;
+    }
+    #profile .category-card:active {
+      background-color: #bfb99f;
+      box-shadow: 0 2px 6px rgba(31,31,31,0.5);
+      color: #1f1f1f;
+      transform: scale(0.97);
+    }
+    #profile .category-card img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 0.375rem;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    #profile .category-card span {
+      font-weight: 600;
+      font-size: 1rem;
+      text-align: center;
+    }
+    /* Confirmation modal */
+    #logoutModal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+    }
+    #logoutModal.active {
+      display: flex;
+    }
+    #logoutModal .modal-content {
+      background: #f5f5dc;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      max-width: 320px;
+      text-align: center;
+      color: #1f1f1f;
+      box-shadow: 0 4px 12px rgba(31,31,31,0.7);
+    }
+    #logoutModal .modal-buttons {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: space-around;
+    }
+    #logoutModal button {
+      background: #1f1f1f;
+      color: #f5f5dc;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 0.375rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(31,31,31,0.15);
+      transition: background-color 0.3s ease;
+    }
+    #logoutModal button:hover {
+      background-color: #3a3a3a;
+    }
+    #logoutModal button:active {
+      background-color: #555555;
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="min-h-screen flex flex-col">
+    <!-- Pantalla de Bienvenida -->
+    <section
+      id="welcome"
+      class="flex flex-col justify-center items-center flex-grow relative px-6 text-center bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900"
+    >
+      <img
+        src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&q=80"
+        alt="Dos modelos con estilo editorial vertical"
+        class="absolute inset-0 w-full h-full object-cover opacity-40 -z-10 rounded-lg max-w-md mx-auto"
+      />
+      <h1 class="text-4xl sm:text-5xl font-bold mb-8 text-[#f5f5dc] drop-shadow-lg">
+        Crea tus outfits
+      </h1>
+      <button
+        id="startBtn"
+        class="btn-primary shadow-lg hover:shadow-xl active:scale-95"
+        aria-label="Comenzar aplicación"
+      >
+        COMIENZA
+      </button>
+    </section>
+
+    <!-- Pantalla de Registro / Inicio de Sesión -->
+    <section
+      id="login"
+      class="hidden flex flex-col justify-center items-center flex-grow bg-[#1f1f1f] px-6"
+    >
+      <div class="w-full max-w-sm bg-[#2c2a29] rounded-lg p-6 shadow-lg text-[#f5f5dc]">
+        <h2 class="text-2xl font-semibold mb-6 text-center drop-shadow-md">
+          INICIO DE SESIÓN
+        </h2>
+        <form id="loginForm" class="flex flex-col space-y-4" novalidate>
+          <input
+            type="email"
+            id="email"
+            placeholder="Correo electrónico"
+            required
+            class="border border-[#f5f5dc] rounded-md px-4 py-2 bg-[#1f1f1f] text-[#f5f5dc]"
+            aria-label="Correo electrónico"
+          />
+          <input
+            type="password"
+            id="password"
+            placeholder="Contraseña"
+            required
+            class="border border-[#f5f5dc] rounded-md px-4 py-2 bg-[#1f1f1f] text-[#f5f5dc]"
+            aria-label="Contraseña"
+          />
+          <button
+            type="submit"
+            class="btn-primary shadow-md hover:shadow-lg active:scale-95"
+            aria-label="Abrir sesión"
+          >
+            Abrir
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Pantalla Principal del Usuario (Armario Virtual) -->
+    <section
+      id="wardrobe"
+      class="hidden flex flex-col flex-grow bg-[#f5f5dc] text-[#1f1f1f] px-4 py-3 max-w-5xl mx-auto rounded-lg shadow-lg"
+    >
+      <!-- Barra superior -->
+      <header
+        class="flex items-center justify-between mb-4 space-x-4 flex-wrap sm:flex-nowrap"
+      >
+        <img
+          src="https://randomuser.me/api/portraits/women/68.jpg"
+          alt="Foto de perfil mujer"
+          class="rounded-full w-12 h-12 object-cover border-2 border-[#1f1f1f] cursor-pointer"
+          id="profilePicNav"
+          title="Ir al perfil"
+        />
+        <input
+          type="search"
+          id="searchInput"
+          placeholder="Buscar prendas..."
+          class="flex-grow min-w-[150px] max-w-xs rounded-md px-3 py-2 bg-[#fff] text-[#1f1f1f]"
+          aria-label="Buscar prendas"
+        />
+        <nav class="flex space-x-4 text-2xl text-[#1f1f1f]" role="navigation" aria-label="Navegación principal">
+          <button
+            title="Inicio"
+            id="navHome"
+            class="icon-btn hover:text-beige focus:text-beige"
+            aria-label="Ir a inicio"
+          >
+            <i class="fas fa-home"></i>
+          </button>
+          <button
+            title="Favoritos"
+            id="navFavorites"
+            class="icon-btn hover:text-beige focus:text-beige"
+            aria-label="Ver favoritos"
+          >
+            <i class="fas fa-star"></i>
+          </button>
+          <button
+            title="Agregar Outfit"
+            id="navAddOutfit"
+            class="icon-btn hover:text-beige focus:text-beige"
+            aria-label="Agregar outfit"
+          >
+            <i class="fas fa-plus"></i>
+          </button>
+          <button
+            title="Perfil"
+            id="navProfile"
+            class="icon-btn hover:text-beige focus:text-beige"
+            aria-label="Ver perfil"
+          >
+            <i class="fas fa-user"></i>
+          </button>
+        </nav>
+      </header>
+
+      <h2 class="text-3xl font-semibold mb-4 drop-shadow-md">Tu Armario</h2>
+
+      <!-- Filtros -->
+      <div
+        id="filters"
+        class="flex flex-wrap gap-3 mb-6"
+        role="list"
+        aria-label="Filtros de prendas"
+      >
+        <button
+          class="filter-btn active"
+          data-filter="all"
+          role="listitem"
+          aria-pressed="true"
+        >
+          Todos
+        </button>
+        <button
+          class="filter-btn"
+          data-filter="blusas"
+          role="listitem"
+          aria-pressed="false"
+        >
+          Blusas
+        </button>
+        <button
+          class="filter-btn"
+          data-filter="zapatos"
+          role="listitem"
+          aria-pressed="false"
+        >
+          Calzado
+        </button>
+        <button
+          class="filter-btn"
+          data-filter="accesorios"
+          role="listitem"
+          aria-pressed="false"
+        >
+          Accesorios
+        </button>
+        <button
+          class="filter-btn"
+          data-filter="vestidos"
+          role="listitem"
+          aria-pressed="false"
+        >
+          Vestidos
+        </button>
+        <button
+          class="filter-btn"
+          data-filter="pantalon"
+          role="listitem"
+          aria-pressed="false"
+        >
+          Pantalones
+        </button>
+        <button
+          class="filter-btn"
+          data-filter="outfit"
+          role="listitem"
+          aria-pressed="false"
+        >
+          Outfit Final
+        </button>
+      </div>
+
+      <!-- Grid de prendas -->
+      <div
+        id="clothesGrid"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 overflow-y-auto max-h-[60vh] scrollbar-thin"
+        aria-live="polite"
+        aria-label="Lista de prendas"
+      >
+        <!-- Tarjetas generadas por JS -->
+      </div>
+    </section>
+
+    <!-- Pantalla de Creación de Outfits -->
+    <section
+      id="createOutfit"
+      class="hidden flex flex-col flex-grow bg-[#f5f5dc] text-[#1f1f1f] px-4 py-3 max-w-5xl mx-auto rounded-lg shadow-lg"
+    >
+      <header
+        class="flex items-center justify-between mb-4"
+      >
+        <h2 class="text-3xl font-semibold drop-shadow-md">Crear Outfit Final</h2>
+        <button
+          id="backToWardrobeFromCreate"
+          class="btn-primary"
+          title="Volver"
+          aria-label="Volver al armario"
+        >
+          ← Volver
+        </button>
+      </header>
+
+      <div class="flex flex-col md:flex-row gap-6">
+        <!-- Sección prendas disponibles -->
+        <div class="flex-1 card-bg p-4 max-h-[60vh] overflow-y-auto scrollbar-thin" aria-label="Prendas disponibles para agregar">
+          <h3 class="text-xl font-semibold mb-3 drop-shadow-md">Prendas disponibles</h3>
+          <div
+            id="availableClothes"
+            class="grid grid-cols-2 gap-4"
+          >
+            <!-- Prendas para agregar -->
+          </div>
+        </div>
+
+        <!-- Sección outfit armado -->
+        <div class="flex-1 card-bg p-4 max-h-[60vh] overflow-y-auto scrollbar-thin" aria-label="Outfit armado">
+          <h3 class="text-xl font-semibold mb-3 drop-shadow-md">Outfit Final</h3>
+          <div
+            id="assembledOutfit"
+            class="space-y-4"
+          >
+            <!-- Prendas agregadas -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pantalla de Recomendaciones -->
+    <section
+      id="recommendations"
+      class="hidden flex flex-col flex-grow bg-[#f5f5dc] text-[#1f1f1f] px-4 py-3 max-w-5xl mx-auto rounded-lg shadow-lg"
+    >
+      <header
+        class="flex items-center justify-between mb-4"
+      >
+        <h2 class="text-3xl font-semibold drop-shadow-md">Obtén tu atuendo adecuado</h2>
+        <button
+          id="backToWardrobeFromRec"
+          class="btn-primary"
+          title="Volver"
+          aria-label="Volver al armario"
+        >
+          ← Volver
+        </button>
+      </header>
+
+      <div class="card-bg p-6 max-h-[60vh] overflow-y-auto scrollbar-thin rounded-md">
+        <p class="mb-4 text-lg font-semibold drop-shadow-md">
+          Ropa sugerida por IA
+        </p>
+        <div
+          id="recommendedClothes"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
+          aria-live="polite"
+          aria-label="Ropa recomendada"
+        >
+          <!-- Tarjetas recomendadas -->
+        </div>
+
+        <section class="mt-8">
+          <h3 class="text-xl font-semibold mb-4 drop-shadow-md">Valoraciones y comentarios</h3>
+          <div id="comments" class="space-y-4 max-h-48 overflow-y-auto scrollbar-thin bg-[#3a372f] rounded-md p-4" aria-live="polite" aria-label="Comentarios de usuarios">
+            <!-- Comentarios generados -->
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- Pantalla Perfil de Usuario -->
+    <section
+      id="profile"
+      class="hidden flex flex-col flex-grow bg-[#f5f5dc] text-[#1f1f1f] px-4 py-6 max-w-5xl mx-auto rounded-lg shadow-lg"
+    >
+      <div class="profile-main">
+        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Foto de perfil Isabel" class="rounded-full w-32 h-32 mx-auto mb-4 object-cover border-4 border-[#1f1f1f]" />
+        <h1 class="profile-name">Isabel.2025</h1>
+        <p class="profile-subtitle">Outfits favoritos</p>
+
+        <div class="profile-cards" role="group" aria-label="Secciones del perfil">
+          <button id="btnFavorites" class="profile-card-btn" aria-label="Ver atuendos favoritos">
+            <i class="fas fa-heart profile-card-icon" aria-hidden="true"></i>
+            Atuendos Favoritos
+          </button>
+          <button id="btnWardrobe" class="profile-card-btn" aria-label="Ver armario">
+            <i class="fas fa-tshirt profile-card-icon" aria-hidden="true"></i>
+            Armario
+          </button>
+          <button id="btnOutfits" class="profile-card-btn" aria-label="Ver outfit final">
+            <i class="fas fa-user-tie profile-card-icon" aria-hidden="true"></i>
+            Outfit Final
+          </button>
+        </div>
+
+        <div class="category-images" aria-label="Categorías de prendas">
+          <!-- Category cards inserted by JS -->
+        </div>
+
+        <button
+          id="logoutBtn"
+          class="w-full max-w-md mx-auto btn-primary"
+          aria-label="Cerrar sesión"
+        >
+          CERRAR SESIÓN
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <div id="logoutModal" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle" aria-describedby="logoutModalDesc" class="fixed inset-0 bg-black bg-opacity-70 hidden justify-center items-center z-50">
+    <div class="modal-content">
+      <h2 id="logoutModalTitle" class="text-xl font-semibold mb-4">¿Desea salir de la app?</h2>
+      <div id="logoutModalDesc" class="mb-6">Confirme para cerrar sesión o cancele para continuar.</div>
+      <div class="modal-buttons">
+        <button id="confirmLogoutBtn" aria-label="Confirmar cierre de sesión">Sí</button>
+        <button id="cancelLogoutBtn" aria-label="Cancelar cierre de sesión">No</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data placeholders with correct images
+    const clothesData = [
+      
+  
+  
+  
+  
+  
+  {
+    id: 24,
+    category: 'outfit',
+    type: 'cartera',
+    name: 'Cartera',
+    color: 'Beige',
+    size: 'Pequeña',
+    brand: 'Marca N',
+    style: 'Clásico',
+    img: 'https://images.unsplash.com/photo-1600185365897-c9906043e3d7?auto=format&fit=crop&w=150&q=80',
+    favorite: true,
+    rating: 4.8,
+  },
+  {
+    id: 25,
+    category: 'outfit',
+    type: 'pantalones',
+    name: 'Pantalón Elegante',
+    color: 'Gris Oscuro',
+    size: 'L',
+    brand: 'Marca U',
+    style: 'Formal',
+    img: 'https://images.unsplash.com/photo-1620192497411-0c94e8696d86?auto=format&fit=crop&w=150&q=80',
+    favorite: false,
+    rating: 4.8,
+  },
+  {
+    id: 26,
+    category: 'outfit',
+    type: 'zapatos',
+    name: 'Tacones negros',
+    color: 'Negro',
+    size: '38',
+    brand: 'Marca C',
+    style: 'Formal',
+    img: 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=150&q=80',
+    favorite: false,
+    rating: 4,
+  },
+  {
+    id: 27,
+    category: 'outfit',
+    type: 'blusas',
+    name: 'Blusa elegante negra',
+    color: 'Negro',
+    size: 'M',
+    brand: 'Marca H',
+    style: 'Elegante',
+    img: 'https://images.unsplash.com/photo-1542068829-1115f7259450?auto=format&fit=crop&w=150&q=80',
+    favorite: false,
+    rating: 4.6,
+  },
+{
+    id: 19,
+    category: 'pantalon',
+    type: 'pantalones',
+    name: 'Pantalón Ancho',
+    color: 'Beige',
+    size: 'M',
+    brand: 'Marca S',
+    style: 'Cómodo',
+    img: 'https://images.unsplash.com/photo-1562158070-57d0bf10b9b0?auto=format&fit=crop&w=150&q=80',
+    favorite: false,
+    rating: 4.5,
+  },
+  {
+    id: 20,
+    category: 'pantalon',
+    type: 'pantalones',
+    name: 'Pantalón Ajustado',
+    color: 'Negro',
+    size: 'S',
+    brand: 'Marca T',
+    style: 'Moderno',
+    img: 'https://images.unsplash.com/photo-1618354691414-6ddbd17358f6?auto=format&fit=crop&w=150&q=80',
+    favorite: true,
+    rating: 4.7,
+  },
+  {
+    id: 21,
+    category: 'pantalon',
+    type: 'pantalones',
+    name: 'Pantalón Elegante',
+    color: 'Gris Oscuro',
+    size: 'L',
+    brand: 'Marca U',
+    style: 'Formal',
+    img: 'https://images.unsplash.com/photo-1620192497411-0c94e8696d86?auto=format&fit=crop&w=150&q=80',
+    favorite: false,
+    rating: 4.8,
+  },
+  {
+    id: 22,
+    category: 'pantalon',
+    type: 'pantalones',
+    name: 'Pantalón Clásico',
+    color: 'Azul',
+    size: 'M',
+    brand: 'Marca V',
+    style: 'Clásico',
+    img: 'https://images.unsplash.com/photo-1603252109303-2754f15555c3?auto=format&fit=crop&w=150&q=80',
+    favorite: true,
+    rating: 4.6,
+  },
+{
+    id: 16,
+    category: 'vestidos',
+    type: 'vestidos',
+    name: 'Vestido Esmeralda',
+    color: 'Verde',
+    size: 'S',
+    brand: 'Marca P',
+    style: 'Elegante',
+    img: 'https://images.unsplash.com/photo-1550639525-c97d455acf70?auto=format&fit=crop&w=150&q=80',
+    favorite: false,
+    rating: 4.9,
+  },
+  {
+    id: 17,
+    category: 'vestidos',
+    type: 'vestidos',
+    name: 'Vestido Veraniego',
+    color: 'Amarillo',
+    size: 'M',
+    brand: 'Marca Q',
+    style: 'Casual',
+    img: 'https://images.unsplash.com/photo-1520975734395-76d4bbfb30c2?auto=format&fit=crop&w=150&q=80',
+    favorite: true,
+    rating: 4.6,
+  },
+  {
+    id: 18,
+    category: 'vestidos',
+    type: 'vestidos',
+    name: 'Vestido Medianoche Real',
+    color: 'Azul Marino',
+    size: 'L',
+    brand: 'Marca R',
+    style: 'Formal',
+    img: 'https://images.unsplash.com/photo-1593032465171-d48b03752a9e?auto=format&fit=crop&w=150&q=80',
+    favorite: false,
+    rating: 4.8,
+  },
+{
+    id: 13,
+    category: 'accesorios',
+    type: 'gafas',
+    name: 'Gafas de Sol',
+    color: 'Negro',
+    size: 'Único',
+    brand: 'Marca M',
+    style: 'Moderno',
+    img: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=150&q=80',
+    favorite: false,
+    rating: 4.5,
+  },
+  {
+    id: 14,
+    category: 'accesorios',
+    type: 'cartera',
+    name: 'Cartera',
+    color: 'Beige',
+    size: 'Pequeña',
+    brand: 'Marca N',
+    style: 'Clásico',
+    img: 'https://images.unsplash.com/photo-1600185365897-c9906043e3d7?auto=format&fit=crop&w=150&q=80',
+    favorite: true,
+    rating: 4.8,
+  },
+  {
+    id: 15,
+    category: 'accesorios',
+    type: 'aretes',
+    name: 'Aretes',
+    color: 'Dorado',
+    size: 'Único',
+    brand: 'Marca O',
+    style: 'Elegante',
+    img: 'https://images.unsplash.com/photo-1617033371585-edd7dd8f165a?auto=format&fit=crop&w=150&q=80',
+    favorite: false,
+    rating: 4.6,
+  },
+{
+    id: 11,
+    category: 'zapatos',
+    type: 'zapatos',
+    name: 'Botina',
+    color: 'Marrón',
+    size: '39',
+    brand: 'Marca K',
+    style: 'Casual',
+    img: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=150&q=80',
+    favorite: false,
+    rating: 4.4,
+  },
+  {
+    id: 12,
+    category: 'zapatos',
+    type: 'zapatos',
+    name: 'Ballet Urbano',
+    color: 'Negro',
+    size: '38',
+    brand: 'Marca L',
+    style: 'Urbano',
+    img: 'https://images.unsplash.com/photo-1519741491051-1a3f1849894b?auto=format&fit=crop&w=150&q=80',
+    favorite: true,
+    rating: 4.7,
+  },
+{
+    id: 10,
+    category: 'blusas',
+    type: 'blusas',
+    name: 'Blusa Roja Cuello V',
+    color: 'Rojo',
+    size: 'M',
+    brand: 'Marca J',
+    style: 'Casual',
+    img: './45c09d0f-0260-4ea9-9f68-f968c551aeab.png',
+    favorite: false,
+    rating: 4.3,
+  },
+{
+        id: 2,
+        category: 'vestidos',
+        type: 'vestidos',
+        name: 'Vestido rojo',
+        color: 'Rojo',
+        size: 'S',
+        brand: 'Marca B',
+        style: 'Elegante',
+        img: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=150&q=80',
+        favorite: true,
+        rating: 5,
+      },
+      {
+        id: 3,
+        category: 'zapatos',
+        type: 'zapatos',
+        name: 'Tacones negros',
+        color: 'Negro',
+        size: '38',
+        brand: 'Marca C',
+        style: 'Formal',
+        img: 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=150&q=80',
+        favorite: false,
+        rating: 4,
+      },
+      {
+        id: 4,
+        category: 'zapatos',
+        type: 'zapatos',
+        name: 'Zapatillas blancas',
+        color: 'Blanco',
+        size: '40',
+        brand: 'Marca F',
+        style: 'Deportivo',
+        img: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=150&q=80',
+        favorite: true,
+        rating: 4.2,
+      },
+      {
+        id: 5,
+        category: 'bolso',
+        type: 'bolso',
+        name: 'Bolso marrón',
+        color: 'Marrón',
+        size: 'Único',
+        brand: 'Marca D',
+        style: 'Casual',
+        img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=150&q=80',
+        favorite: true,
+        rating: 4.8,
+      },
+      {
+        id: 6,
+        category: 'blusas',
+        type: 'blusas',
+        name: 'Blusa blanca',
+        color: 'Blanco',
+        size: 'L',
+        brand: 'Marca E',
+        style: 'Casual',
+        img: 'https://images.unsplash.com/photo-1520975698514-0a3a7a3a3a3a?auto=format&fit=crop&w=150&q=80',
+        favorite: false,
+        rating: 3.5,
+      },
+      {
+        id: 8,
+        category: 'blusas',
+        type: 'blusas',
+        name: 'Blusa elegante negra',
+        color: 'Negro',
+        size: 'M',
+        brand: 'Marca H',
+        style: 'Elegante',
+        img: 'https://images.unsplash.com/photo-1542068829-1115f7259450?auto=format&fit=crop&w=150&q=80',
+        favorite: false,
+        rating: 4.6,
+      },
+      {
+        id: 9,
+        category: 'blusas',
+        type: 'blusas',
+        name: 'Blusa sin mangas rosada',
+        color: 'Rosado',
+        size: 'S',
+        brand: 'Marca I',
+        style: 'Casual',
+        img: 'https://images.unsplash.com/photo-1520975698514-0a3a7a3a3a3a?auto=format&fit=crop&w=150&q=80&h=150&fit=crop',
+        favorite: false,
+        rating: 4.1,
+      },
+      {
+        id: 7,
+        category: 'accesorios',
+        type: 'collar',
+        name: 'Collar dorado',
+        color: 'Dorado',
+        size: 'Único',
+        brand: 'Marca G',
+        style: 'Elegante',
+        img: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=150&q=80',
+        favorite: false,
+        rating: 4.7,
+      },
+    ];
+
+    const categories = [
+      { key: 'zapatos', label: 'Zapatos', icon: 'fas fa-shoe-prints', img: 'https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=80&q=80' },
+      { key: 'bolso', label: 'Bolsos', icon: 'fas fa-shopping-bag', img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=80&q=80' },
+      { key: 'accesorios', label: 'Accesorios', icon: 'fas fa-gem', img: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=80&q=80' },
+      { key: 'blusas', label: 'Blusas', icon: 'fas fa-tshirt', img: 'https://images.unsplash.com/photo-1542068829-1115f7259450?auto=format&fit=crop&w=80&q=80' },
+      { key: 'vestidos', label: 'Vestidos', icon: 'fas fa-female', img: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=80&q=80' },
+      { key: 'pantalon', label: 'Pantalones', icon: 'fas fa-user', img: 'https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=80&q=80' },
+      { key: 'collar', label: 'Collares', icon: 'fas fa-ring', img: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=80&q=80' },
+      { key: 'outfit', label: 'Outfit Final', icon: 'fas fa-user-tie', img: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=80&q=80' },
+    ];
+
+    // App state
+    let currentScreen = 'welcome';
+    let outfit = [];
+
+    // DOM elements
+    const app = document.getElementById('app');
+    const welcomeSection = document.getElementById('welcome');
+    const loginSection = document.getElementById('login');
+    const wardrobeSection = document.getElementById('wardrobe');
+    const createOutfitSection = document.getElementById('createOutfit');
+    const recommendationsSection = document.getElementById('recommendations');
+    const profileSection = document.getElementById('profile');
+
+    const startBtn = document.getElementById('startBtn');
+    const loginForm = document.getElementById('loginForm');
+    const searchInput = document.getElementById('searchInput');
+    const clothesGrid = document.getElementById('clothesGrid');
+    const filters = document.getElementById('filters');
+    const navHome = document.getElementById('navHome');
+    const navFavorites = document.getElementById('navFavorites');
+    const navAddOutfit = document.getElementById('navAddOutfit');
+    const navProfile = document.getElementById('navProfile');
+    const profilePicNav = document.getElementById('profilePicNav');
+
+    const availableClothesDiv = document.getElementById('availableClothes');
+    const assembledOutfitDiv = document.getElementById('assembledOutfit');
+    const backToWardrobeFromCreate = document.getElementById(
+      'backToWardrobeFromCreate'
+    );
+    const backToWardrobeFromRec = document.getElementById('backToWardrobeFromRec');
+    const backToWardrobeFromProfile = document.getElementById(
+      'backToWardrobeFromProfile'
+    );
+    const recommendedClothesDiv = document.getElementById('recommendedClothes');
+    const commentsDiv = document.getElementById('comments');
+    const savedOutfitsUl = document.getElementById('savedOutfits');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // Profile category images container
+    const categoryImagesContainer = profileSection.querySelector('.category-images');
+
+    // Utility: Show only one screen
+    function showScreen(screen) {
+      currentScreen = screen;
+      [
+        welcomeSection,
+        loginSection,
+        wardrobeSection,
+        createOutfitSection,
+        recommendationsSection,
+        profileSection,
+      ].forEach((sec) => {
+        sec.classList.add('hidden');
+      });
+      switch (screen) {
+        case 'welcome':
+          welcomeSection.classList.remove('hidden');
+          break;
+        case 'login':
+          loginSection.classList.remove('hidden');
+          break;
+        case 'wardrobe':
+          wardrobeSection.classList.remove('hidden');
+          break;
+        case 'createOutfit':
+          createOutfitSection.classList.remove('hidden');
+          break;
+        case 'recommendations':
+          recommendationsSection.classList.remove('hidden');
+          break;
+        case 'profile':
+          profileSection.classList.remove('hidden');
+          break;
+      }
+    }
+
+    // Render clothes grid with filters and search
+    function renderClothesGrid(filter = 'all', search = '') {
+  clothesGrid.innerHTML = '';
+  let filtered = clothesData;
+
+  if (filter !== 'all') {
+    filtered = filtered.filter((c) => c.category === filter);
+  }
+
+  if (search.trim() !== '') {
+    const s = search.toLowerCase();
+    filtered = filtered.filter(
+      (c) =>
+        c.name.toLowerCase().includes(s) ||
+        c.brand.toLowerCase().includes(s) ||
+        c.color.toLowerCase().includes(s) ||
+        c.style.toLowerCase().includes(s)
+    );
+  }
+
+  // Ordenar alfabéticamente por nombre
+  filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
+filtered.forEach((item) => {
+        const card = document.createElement('div');
+        card.className =
+          'card-bg p-3 flex flex-col items-center shadow-md relative group';
+        card.innerHTML = `
+          <img src="${item.img}" alt="${item.name}" class="w-full h-32 object-cover rounded-md mb-2" />
+          <h3 class="font-semibold text-center">${item.name}</h3>
+          <p class="text-xs text-[#1f1f1f]">${item.brand} - ${item.color}</p>
+          <p class="text-xs text-[#1f1f1f]">Talla: ${item.size}</p>
+          <p class="text-xs text-[#1f1f1f]">Estilo: ${item.style}</p>
+          <div class="flex items-center space-x-2 mt-2">
+            <button class="favorite-btn text-yellow-600" title="Favorito" aria-label="Marcar como favorito">
+              <i class="${item.favorite ? 'fas' : 'far'} fa-heart"></i>
+            </button>
+            <div class="flex text-yellow-600 text-sm" aria-label="Calificación">
+              ${renderStars(item.rating)}
+            </div>
+            <button class="add-btn text-[#1f1f1f] bg-yellow-400 rounded px-2 py-1 text-xs font-semibold hover:bg-yellow-500 active:scale-95" title="Agregar a outfit" aria-label="Agregar a outfit">+</button>
+          </div>
+        `;
+        // Favorite toggle
+        card.querySelector('.favorite-btn').addEventListener('click', () => {
+          item.favorite = !item.favorite;
+          renderClothesGrid(filter, search);
+        });
+        // Add to outfit
+        card.querySelector('.add-btn').addEventListener('click', () => {
+          if (!outfit.find((i) => i.id === item.id)) {
+            outfit.push(item);
+            renderAssembledOutfit();
+            showScreen('createOutfit');
+          }
+        });
+        clothesGrid.appendChild(card);
+      });
+    }
+
+    // Render stars for rating
+    function renderStars(rating) {
+      const fullStars = Math.floor(rating);
+      const halfStar = rating - fullStars >= 0.5;
+      let starsHtml = '';
+      for (let i = 0; i < fullStars; i++) {
+        starsHtml += '<i class="fas fa-star"></i>';
+      }
+      if (halfStar) {
+        starsHtml += '<i class="fas fa-star-half-alt"></i>';
+      }
+      const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+      for (let i = 0; i < emptyStars; i++) {
+        starsHtml += '<i class="far fa-star"></i>';
+      }
+      return starsHtml;
+    }
+
+    // Render available clothes for outfit creation
+    function renderAvailableClothes() {
+      availableClothesDiv.innerHTML = '';
+      clothesData.forEach((item) => {
+        // Skip if already in outfit
+        if (outfit.find((i) => i.id === item.id)) return;
+        const card = document.createElement('div');
+        card.className =
+          'card-bg p-3 flex flex-col items-center shadow-md relative group';
+        card.innerHTML = `
+          <img src="${item.img}" alt="${item.name}" class="w-full h-24 object-cover rounded-md mb-2" />
+          <h3 class="font-semibold text-center text-sm">${item.name}</h3>
+          <button class="add-btn text-[#1f1f1f] bg-yellow-400 rounded px-2 py-1 text-xs font-semibold hover:bg-yellow-500 active:scale-95" title="Agregar a outfit" aria-label="Agregar a outfit">Agregar</button>
+        `;
+        card.querySelector('.add-btn').addEventListener('click', () => {
+          outfit.push(item);
+          renderAvailableClothes();
+          renderAssembledOutfit();
+        });
+        availableClothesDiv.appendChild(card);
+      });
+      if (availableClothesDiv.children.length === 0) {
+        availableClothesDiv.innerHTML =
+          '<p class="text-center text-gray-600">No hay más prendas para agregar.</p>';
+      }
+    }
+
+    // Render assembled outfit
+    function renderAssembledOutfit() {
+      assembledOutfitDiv.innerHTML = '';
+      if (outfit.length === 0) {
+        assembledOutfitDiv.innerHTML =
+          '<p class="text-center text-gray-600">No has agregado prendas al outfit.</p>';
+        return;
+      }
+      outfit.forEach((item) => {
+        const card = document.createElement('div');
+        card.className =
+          'card-bg p-3 flex items-center space-x-3 shadow-md';
+        card.innerHTML = `
+          <img src="${item.img}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md" />
+          <div class="flex-grow">
+            <h3 class="font-semibold">${item.name}</h3>
+            <p class="text-xs text-[#1f1f1f]">${item.brand} - ${item.color}</p>
+            <p class="text-xs text-[#1f1f1f]">Talla: ${item.size}</p>
+            <p class="text-xs text-[#1f1f1f]">Estilo: ${item.style}</p>
+          </div>
+          <button class="remove-btn text-red-600 hover:text-red-700 text-xl font-bold" title="Quitar" aria-label="Quitar prenda">&times;</button>
+        `;
+        card.querySelector('.remove-btn').addEventListener('click', () => {
+          outfit = outfit.filter((i) => i.id !== item.id);
+          renderAvailableClothes();
+          renderAssembledOutfit();
+        });
+        assembledOutfitDiv.appendChild(card);
+      });
+    }
+
+    // Render recommended clothes (simulate IA)
+    function renderRecommendedClothes() {
+      recommendedClothesDiv.innerHTML = '';
+      // For demo, pick 4 random clothes
+      const shuffled = clothesData.sort(() => 0.5 - Math.random());
+      const recommended = shuffled.slice(0, 4);
+      recommended.forEach((item) => {
+        const card = document.createElement('div');
+        card.className =
+          'card-bg p-3 flex flex-col items-center shadow-md relative group';
+        card.innerHTML = `
+          <img src="${item.img}" alt="${item.name}" class="w-full h-32 object-cover rounded-md mb-2" />
+          <h3 class="font-semibold text-center">${item.name}</h3>
+          <p class="text-xs text-[#1f1f1f]">${item.brand} - ${item.color}</p>
+          <p class="text-xs text-[#1f1f1f]">Talla: ${item.size}</p>
+          <p class="text-xs text-[#1f1f1f]">Estilo: ${item.style}</p>
+          <div class="flex items-center space-x-2 mt-2" aria-label="Calificación">
+            <div class="flex text-yellow-600 text-sm">
+              ${renderStars(item.rating)}
+            </div>
+          </div>
+        `;
+        recommendedClothesDiv.appendChild(card);
+      });
+    }
+
+    // Render comments
+    function renderComments() {
+      commentsDiv.innerHTML = '';
+      commentsData.forEach((c) => {
+        const commentDiv = document.createElement('div');
+        commentDiv.className = 'flex space-x-3 items-start';
+        commentDiv.innerHTML = `
+          <img src="${c.avatar}" alt="Avatar de ${c.user}" class="w-10 h-10 rounded-full object-cover border-2 border-[#1f1f1f]" />
+          <div>
+            <p class="font-semibold">${c.user}</p>
+            <p class="text-sm">${c.comment}</p>
+            <div class="flex text-yellow-600 text-sm mt-1" aria-label="Calificación">
+              ${renderStars(c.rating)}
+            </div>
+          </div>
+        `;
+        commentsDiv.appendChild(commentDiv);
+      });
+    }
+
+    // Render saved outfits (dummy)
+    function renderSavedOutfits() {
+      savedOutfitsUl.innerHTML = '';
+      // Dummy outfits
+      const saved = [
+        'Outfit Casual - Pantalones y Blusa',
+        'Outfit Formal - Vestido y Tacones',
+        'Outfit Deportivo - Zapatillas y Shorts',
+      ];
+      saved.forEach((o) => {
+        const li = document.createElement('li');
+        li.textContent = o;
+        savedOutfitsUl.appendChild(li);
+      });
+    }
+
+    // Render categories in profile with images and buttons
+    function renderProfileCategories() {
+      categoryImagesContainer.innerHTML = '';
+      categories.forEach(cat => {
+        const card = document.createElement('button');
+        card.className = 'category-card';
+        card.setAttribute('aria-label', `Ver categoría ${cat.label}`);
+        card.innerHTML = `
+          <img src="${cat.img}" alt="${cat.label}" />
+          <span>${cat.label}</span>
+        `;
+        card.addEventListener('click', () => {
+          // On click, show wardrobe filtered by category key
+          showScreen('wardrobe');
+          searchInput.value = '';
+          renderClothesGrid(cat.key);
+          // Update filters UI to none selected
+          filters.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-pressed', 'false');
+          });
+          // Highlight filter if exists
+          const filterBtn = Array.from(filters.querySelectorAll('.filter-btn')).find(b => b.dataset.filter === cat.key);
+          if(filterBtn){
+            filterBtn.classList.add('active');
+            filterBtn.setAttribute('aria-pressed', 'true');
+          }
+        });
+        categoryImagesContainer.appendChild(card);
+      });
+    }
+
+    // Profile buttons functionality
+    const btnFavorites = document.getElementById('btnFavorites');
+    const btnWardrobe = document.getElementById('btnWardrobe');
+    const btnOutfits = document.getElementById('btnOutfits');
+
+    btnFavorites.addEventListener('click', () => {
+      showScreen('wardrobe');
+      searchInput.value = '';
+      renderClothesGrid('all');
+      clothesGrid.innerHTML = '';
+      const favs = clothesData.filter((c) => c.favorite);
+      if (favs.length === 0) {
+        clothesGrid.innerHTML =
+          '<p class="col-span-full text-center text-gray-600">No tienes prendas favoritas.</p>';
+        return;
+      }
+      favs.forEach((item) => {
+        const card = document.createElement('div');
+        card.className =
+          'card-bg p-3 flex flex-col items-center shadow-md relative group';
+        card.innerHTML = `
+          <img src="${item.img}" alt="${item.name}" class="w-full h-32 object-cover rounded-md mb-2" />
+          <h3 class="font-semibold text-center">${item.name}</h3>
+          <p class="text-xs text-[#1f1f1f]">${item.brand} - ${item.color}</p>
+          <p class="text-xs text-[#1f1f1f]">Talla: ${item.size}</p>
+          <p class="text-xs text-[#1f1f1f]">Estilo: ${item.style}</p>
+          <div class="flex items-center space-x-2 mt-2">
+            <button class="favorite-btn text-yellow-600" title="Favorito" aria-label="Marcar como favorito">
+              <i class="fas fa-heart"></i>
+            </button>
+            <div class="flex text-yellow-600 text-sm" aria-label="Calificación">
+              ${renderStars(item.rating)}
+            </div>
+            <button class="add-btn text-[#1f1f1f] bg-yellow-400 rounded px-2 py-1 text-xs font-semibold hover:bg-yellow-500 active:scale-95" title="Agregar a outfit" aria-label="Agregar a outfit">+</button>
+          </div>
+        `;
+        card.querySelector('.add-btn').addEventListener('click', () => {
+          if (!outfit.find((i) => i.id === item.id)) {
+            outfit.push(item);
+            renderAssembledOutfit();
+            showScreen('createOutfit');
+          }
+        });
+        clothesGrid.appendChild(card);
+      });
+      filters.querySelectorAll('.filter-btn').forEach((btn) => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+      });
+    });
+
+    btnWardrobe.addEventListener('click', () => {
+      showScreen('wardrobe');
+      searchInput.value = '';
+      renderClothesGrid();
+      filters.querySelectorAll('.filter-btn').forEach((btn) => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+      });
+      const allBtn = filters.querySelector('.filter-btn[data-filter="all"]');
+      allBtn.classList.add('active');
+      allBtn.setAttribute('aria-pressed', 'true');
+    });
+
+    btnOutfits.addEventListener('click', () => {
+      showScreen('createOutfit');
+      renderAvailableClothes();
+      renderAssembledOutfit();
+    });
+
+    // Nav profile pic click to profile
+    profilePicNav.addEventListener('click', () => {
+      showScreen('profile');
+      renderSavedOutfits();
+      renderProfileCategories();
+    });
+
+    // Other event listeners (start, login, nav, back, logout)
+    startBtn.addEventListener('click', () => {
+      showScreen('login');
+    });
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = e.target.email.value.trim();
+      const password = e.target.password.value.trim();
+      if (email && password) {
+        showScreen('wardrobe');
+        renderClothesGrid();
+      } else {
+        alert('Por favor, ingresa correo y contraseña.');
+      }
+    });
+
+    filters.addEventListener('click', (e) => {
+      if (e.target.classList.contains('filter-btn')) {
+        const filter = e.target.getAttribute('data-filter');
+        renderClothesGrid(filter, searchInput.value);
+        filters.querySelectorAll('.filter-btn').forEach((btn) => {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-pressed', 'false');
+        });
+        e.target.classList.add('active');
+        e.target.setAttribute('aria-pressed', 'true');
+      }
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      const activeFilterBtn = filters.querySelector('.filter-btn.active');
+      const filter = activeFilterBtn
+        ? activeFilterBtn.getAttribute('data-filter')
+        : 'all';
+      renderClothesGrid(filter, e.target.value);
+    });
+
+    navHome.addEventListener('click', () => {
+      showScreen('wardrobe');
+      renderClothesGrid();
+      searchInput.value = '';
+      filters.querySelectorAll('.filter-btn').forEach((btn) => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+      });
+      const allBtn = filters.querySelector('.filter-btn[data-filter="all"]');
+      allBtn.classList.add('active');
+      allBtn.setAttribute('aria-pressed', 'true');
+    });
+
+    navFavorites.addEventListener('click', () => {
+      showScreen('wardrobe');
+      searchInput.value = '';
+      renderClothesGrid('all');
+      clothesGrid.innerHTML = '';
+      const favs = clothesData.filter((c) => c.favorite);
+      if (favs.length === 0) {
+        clothesGrid.innerHTML =
+          '<p class="col-span-full text-center text-gray-600">No tienes prendas favoritas.</p>';
+        return;
+      }
+      favs.forEach((item) => {
+        const card = document.createElement('div');
+        card.className =
+          'card-bg p-3 flex flex-col items-center shadow-md relative group';
+        card.innerHTML = `
+          <img src="${item.img}" alt="${item.name}" class="w-full h-32 object-cover rounded-md mb-2" />
+          <h3 class="font-semibold text-center">${item.name}</h3>
+          <p class="text-xs text-[#1f1f1f]">${item.brand} - ${item.color}</p>
+          <p class="text-xs text-[#1f1f1f]">Talla: ${item.size}</p>
+          <p class="text-xs text-[#1f1f1f]">Estilo: ${item.style}</p>
+          <div class="flex items-center space-x-2 mt-2">
+            <button class="favorite-btn text-yellow-600" title="Favorito" aria-label="Marcar como favorito">
+              <i class="fas fa-heart"></i>
+            </button>
+            <div class="flex text-yellow-600 text-sm" aria-label="Calificación">
+              ${renderStars(item.rating)}
+            </div>
+            <button class="add-btn text-[#1f1f1f] bg-yellow-400 rounded px-2 py-1 text-xs font-semibold hover:bg-yellow-500 active:scale-95" title="Agregar a outfit" aria-label="Agregar a outfit">+</button>
+          </div>
+        `;
+        card.querySelector('.add-btn').addEventListener('click', () => {
+          if (!outfit.find((i) => i.id === item.id)) {
+            outfit.push(item);
+            renderAssembledOutfit();
+            showScreen('createOutfit');
+          }
+        });
+        clothesGrid.appendChild(card);
+      });
+      filters.querySelectorAll('.filter-btn').forEach((btn) => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+      });
+    });
+
+    navAddOutfit.addEventListener('click', () => {
+      showScreen('createOutfit');
+      renderAvailableClothes();
+      renderAssembledOutfit();
+    });
+
+    navProfile.addEventListener('click', () => {
+      showScreen('profile');
+      renderSavedOutfits();
+      renderProfileCategories();
+    });
+
+    backToWardrobeFromCreate.addEventListener('click', () => {
+      showScreen('wardrobe');
+      renderClothesGrid();
+      searchInput.value = '';
+      filters.querySelectorAll('.filter-btn').forEach((btn) => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+      });
+      const allBtn = filters.querySelector('.filter-btn[data-filter="all"]');
+      allBtn.classList.add('active');
+      allBtn.setAttribute('aria-pressed', 'true');
+    });
+
+    backToWardrobeFromRec.addEventListener('click', () => {
+      showScreen('wardrobe');
+      renderClothesGrid();
+      searchInput.value = '';
+      filters.querySelectorAll('.filter-btn').forEach((btn) => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+      });
+      const allBtn = filters.querySelector('.filter-btn[data-filter="all"]');
+      allBtn.classList.add('active');
+      allBtn.setAttribute('aria-pressed', 'true');
+    });
+
+    backToWardrobeFromProfile.addEventListener('click', () => {
+      showScreen('wardrobe');
+      renderClothesGrid();
+      searchInput.value = '';
+      filters.querySelectorAll('.filter-btn').forEach((btn) => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+      });
+      const allBtn = filters.querySelector('.filter-btn[data-filter="all"]');
+      allBtn.classList.add('active');
+      allBtn.setAttribute('aria-pressed', 'true');
+    });
+  </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const logoutBtn = document.getElementById('logoutBtn');
+    const logoutModal = document.getElementById('logoutModal');
+    const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+    const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
+
+    if (logoutBtn && logoutModal && confirmLogoutBtn && cancelLogoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        logoutModal.classList.add('active');
+      });
+
+      confirmLogoutBtn.addEventListener('click', () => {
+        outfit = [];
+        logoutModal.classList.remove('active');
+        showScreen('welcome');
+      });
+
+      cancelLogoutBtn.addEventListener('click', () => {
+        logoutModal.classList.remove('active');
+      });
+    } else {
+      console.error("Alguno de los elementos del logout no se encontró.");
+    }
+  });
+</script>
+
+</body>
+</html>
